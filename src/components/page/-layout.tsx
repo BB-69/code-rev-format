@@ -212,8 +212,11 @@ const GridRow = ({
           <Comment
             comment={comment}
             onEdit={onEdit}
-            onDelete={onDelete}
-            onExpandChange={setRowIsHighlighted}
+            onDelete={(id) => {
+              onDelete(id);
+              setRowIsHighlighted(false);
+            }}
+            onExpandChange={() => setRowIsHighlighted(true)}
           />
         ) : (
           <button
