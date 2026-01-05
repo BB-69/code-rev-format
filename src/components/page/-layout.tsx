@@ -6,6 +6,7 @@ const Comment = ({
   comment,
   onEdit,
   onDelete,
+  onExpandChange,
 }: {
   comment: {
     id: number;
@@ -14,6 +15,7 @@ const Comment = ({
   };
   onEdit: (id: number, newText: string) => void;
   onDelete: (id: number) => void;
+  onExpandChange: (expanded: boolean) => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -21,6 +23,10 @@ const Comment = ({
   const [editText, setEditText] = useState(comment.text);
 
   const isExpanded = isHovered || isClicked;
+
+  useEffect(() => {
+    onExpandChange(isExpanded || isEditing);
+  }, [isExpanded, isEditing]);
 
   const handleSave = () => {
     onEdit(comment.id, editText);
@@ -128,11 +134,13 @@ const GridRow = ({
   content,
   comment,
   hasComment,
+  isHighlighted,
   onAddComment,
   onInput,
   onEdit,
   onDelete,
   scrollOffset,
+  onCommentExpand,
 }: {
   lineNumber: number;
   content: string;
@@ -142,21 +150,33 @@ const GridRow = ({
     text: string;
   };
   hasComment: boolean;
+  isHighlighted: boolean;
   onAddComment: (lineNumber: number) => void;
   onInput: (index: number, newContent: string) => void;
   onEdit: (id: number, newText: string) => void;
   onDelete: (id: number) => void;
   scrollOffset: number;
+  onCommentExpand: (expanded: boolean) => void;
 }) => {
+  const [rowIsHighlighted, setRowIsHighlighted] = useState(false);
+
+  const rowHighlight = rowIsHighlighted
+    ? "bg-yellow-100 [.dark_&]:bg-yellow-900/40"
+    : "";
+
   return (
     <>
       {/* Line Number Column */}
-      <div className="text-right pr-3 py-1 text-gray-500 [.dark_&]:text-gray-400 text-sm select-none border-r border-gray-200 [.dark_&]:border-gray-700 bg-gray-50 [.dark_&]:bg-gray-900">
+      <div
+        className={`text-right pr-3 py-1 ${rowHighlight} text-gray-500 [.dark_&]:text-gray-400 text-sm select-none border-r border-gray-200 [.dark_&]:border-gray-700 bg-gray-50 [.dark_&]:bg-gray-900`}
+      >
         {lineNumber}
       </div>
 
       {/* Code Column */}
-      <div className="group hover:bg-gray-100 [.dark_&]:hover:bg-gray-800 relative border-r border-gray-200 [.dark_&]:border-gray-700 bg-gray-50 [.dark_&]:bg-gray-900 overflow-hidden">
+      <div
+        className={`group hover:bg-gray-100 [.dark_&]:hover:bg-gray-800 relative border-r ${rowHighlight} border-gray-200 [.dark_&]:border-gray-700 bg-gray-50 [.dark_&]:bg-gray-900 overflow-hidden`}
+      >
         <div
           className="flex items-center min-h-[24px] code-line-content"
           style={{ transform: `translateX(-${scrollOffset}px)` }}
@@ -183,10 +203,17 @@ const GridRow = ({
       </div>
 
       {/* Comment Column */}
-      <div className="relative bg-gray-50 [.dark_&]:bg-gray-900 min-h-[24px]">
+      <div
+        className={`relative bg-gray-50 [.dark_&]:bg-gray-900 min-h-[24px] ${rowHighlight}`}
+      >
         <div className="absolute left-0 top-1/2 w-full h-px bg-gray-300 [.dark_&]:bg-gray-600"></div>
         {comment ? (
-          <Comment comment={comment} onEdit={onEdit} onDelete={onDelete} />
+          <Comment
+            comment={comment}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onExpandChange={setRowIsHighlighted}
+          />
         ) : (
           <button
             onClick={() => onAddComment(lineNumber)}
@@ -210,6 +237,9 @@ const Layout = () => {
       text: string;
     };
   }>({});
+  const [activeCommentLine, setActiveCommentLine] = useState<number | null>(
+    null
+  );
   const [codeWidth, setCodeWidth] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const [horizontalScroll, setHorizontalScroll] = useState(0);
@@ -259,7 +289,7 @@ const Layout = () => {
     const newComment = {
       id: Date.now(),
       lineNumber,
-      text: "New comment...",
+      text: "...",
     };
     setComments((prev) => ({
       ...prev,
@@ -392,11 +422,15 @@ const Layout = () => {
                 content={line}
                 comment={comment}
                 hasComment={!!comment}
+                isHighlighted={activeCommentLine === lineNumber}
                 onAddComment={handleAddComment}
                 onInput={handleLineEdit}
                 onEdit={handleEditComment}
                 onDelete={handleDeleteComment}
                 scrollOffset={horizontalScroll}
+                onCommentExpand={(expanded) =>
+                  setActiveCommentLine(expanded ? lineNumber : null)
+                }
               />
             );
           })}
