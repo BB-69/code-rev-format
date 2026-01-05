@@ -58,7 +58,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Pull previous changes
-        run: git pull origin ${{ github.head_ref }}
+        run: git pull --rebase origin ${{ github.head_ref }}
 
       - name: Update README.md
         run: node .github/scripts/update-dependency-info.js
