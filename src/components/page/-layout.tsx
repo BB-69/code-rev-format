@@ -1,6 +1,7 @@
-import { Check, X, Edit2, Trash2, Plus } from "lucide-react";
+import { Check, X, Edit2, Trash2, Plus, CodeXml } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { ThemeSwitcher } from "../common/theme";
+import ButtonToggle from "../common/button-toggle";
 
 const Comment = ({
   comment,
@@ -249,7 +250,7 @@ const Layout = () => {
   const scrollThumbRef = useRef<HTMLDivElement>(null);
   const [isScrollDragging, setIsScrollDragging] = useState(false);
 
-  useEffect(() => {
+  async function getLinesFromFile() {
     fetch("/code/code.txt")
       .then((res) => res.text())
       .then((text) => {
@@ -259,6 +260,10 @@ const Layout = () => {
       .catch((err) => {
         console.error("Failed to load file...", err);
       });
+  }
+
+  useEffect(() => {
+    getLinesFromFile();
   }, []);
 
   useEffect(() => {
@@ -397,6 +402,12 @@ const Layout = () => {
     <div className="flex flex-col w-full h-screen bg-white [.dark_&]:bg-gray-900">
       <div className="absolute top-2 right-2 z-10">
         <ThemeSwitcher />
+      </div>
+
+      <div className="absolute top-2 left-2 z-10">
+        <ButtonToggle onToggle={getLinesFromFile}>
+          <CodeXml />
+        </ButtonToggle>
       </div>
 
       <div
