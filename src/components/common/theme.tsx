@@ -104,9 +104,9 @@ export function ThemeSwitcher({
   return (
     <div
       className="w-[60px] h-[60px] flex justify-center items-center
-      rounded-md text-[24px]"
+      rounded-md text-[18px]"
     >
-      <ButtonToggle onToggle={cycle} pxSize={{ w: 60, h: 60 }}>
+      <ButtonToggle onToggle={cycle} pxSize={{ w: 40, h: 40 }}>
         {icon}
       </ButtonToggle>
     </div>

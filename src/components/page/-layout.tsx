@@ -395,7 +395,7 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col w-full h-screen bg-white [.dark_&]:bg-gray-900">
-      <div className="absolute top-5 right-5 z-10">
+      <div className="absolute top-2 right-2 z-10">
         <ThemeSwitcher />
       </div>
 
