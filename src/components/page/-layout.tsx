@@ -475,7 +475,7 @@ const Layout = () => {
 
         {/* Resizer */}
         <div
-          className="fixed top-0 bottom-0 w-1 bg-gray-300 [.dark_&]:bg-gray-600 hover:bg-blue-500 [.dark_&]:hover:bg-blue-500 cursor-col-resize transition-colors z-20"
+          className="absolute top-0 bottom-0 w-1 bg-gray-300 [.dark_&]:bg-gray-600 hover:bg-blue-500 [.dark_&]:hover:bg-blue-500 cursor-col-resize transition-colors z-20"
           style={{ left: `calc(48px + ${codeWidth}%)` }}
           onMouseDown={handleMouseDown}
         />
