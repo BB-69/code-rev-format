@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/my-react-vite-template/",
+  base: "/code-rev-format/",
   server: {
     host: false,
   },

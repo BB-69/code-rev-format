@@ -1,9 +1,9 @@
 {
-  "name": "my-react-vite-template",
+  "name": "code-rev-format",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "homepage": "https://BB-69.github.io/my-react-vite-template",
+  "homepage": "https://BB-69.github.io/code-rev-format",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
