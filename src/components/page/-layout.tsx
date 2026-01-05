@@ -202,17 +202,7 @@ const GridRow = ({
 
 // Main Layout Component
 const Layout = () => {
-  const [lines, setLines] = useState<string[]>([
-    "function example() {",
-    '  console.log("Hello World");',
-    "  return true;",
-    "}",
-    "",
-    "const data = [1, 2, 3];",
-    "data.forEach(item => {",
-    "  console.log(item);",
-    "});",
-  ]);
+  const [lines, setLines] = useState<string[]>([]);
   const [comments, setComments] = useState<{
     [key: string]: {
       id: number;
@@ -228,6 +218,18 @@ const Layout = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollThumbRef = useRef<HTMLDivElement>(null);
   const [isScrollDragging, setIsScrollDragging] = useState(false);
+
+  useEffect(() => {
+    fetch("/code/code.txt")
+      .then((res) => res.text())
+      .then((text) => {
+        const splitLines = text.split(/\r?\n/);
+        setLines(splitLines);
+      })
+      .catch((err) => {
+        console.error("Failed to load file...", err);
+      });
+  }, []);
 
   useEffect(() => {
     // Calculate max scroll width based on content

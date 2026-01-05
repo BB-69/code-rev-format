@@ -1,0 +1,9 @@
+function example() {
+  console.log("Hello World");
+  return true;
+}
+
+const data = [1, 2, 3];
+data.forEach(item => {
+  console.log(item);
+});
